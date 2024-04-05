@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-house-residents
+      author: DatChan
+      changes:
+        - createTable:
+            tableName: house_residents
+            columns:
+              - column:
+                  name: house_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: house_house_residents_id_fk
+                    referencedTableName: house
+                    referencedColumnNames: house_id
+
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: user_house_residents_fk
+                    referencedTableName: users
+                    referencedColumnNames: user_id
+
+        - addPrimaryKey:
+            columnNames: house_id, user_id
+            tableName: house_residents
+            constraintName: house_residents_pk
+
+

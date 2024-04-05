@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: alter-column-username
+      author: DatChan
+      changes:
+        - addUniqueConstraint:
+            tableName: users
+            columnNames: username

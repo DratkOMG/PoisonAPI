@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-house
+      author: DatChan
+      changes:
+        - createTable:
+            tableName: house
+            columns:
+              - column:
+                  name: house_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: address
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: owner_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: user_house_fk
+                    referencedTableName: users
+                    referencedColumnNames: user_id
