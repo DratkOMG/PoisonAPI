@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public interface JwtService {
 
-    Map<String, String> generateTokens(String subject);
+    String generateTokens(String subject);
 
     Authentication buildAuthentication(String token);
 }

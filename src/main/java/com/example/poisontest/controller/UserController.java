@@ -1,5 +1,6 @@
 package com.example.poisontest.controller;
 
+import com.example.poisontest.dto.token.TokenDto;
 import com.example.poisontest.dto.user.CreateOrUpdateUserDto;
 import com.example.poisontest.dto.user.UserDto;
 import com.example.poisontest.service.UserService;
@@ -42,8 +43,8 @@ public class UserController {
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<Map<String, String>> addUser(@Valid @RequestBody CreateOrUpdateUserDto createOrUpdateUserDto) {
-        Map<String, String> addUserAndGetToken = userService.addUser(createOrUpdateUserDto);
+    public ResponseEntity<TokenDto> addUser(@Valid @RequestBody CreateOrUpdateUserDto createOrUpdateUserDto) {
+        TokenDto addUserAndGetToken = userService.addUser(createOrUpdateUserDto);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)

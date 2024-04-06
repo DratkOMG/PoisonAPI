@@ -33,7 +33,7 @@ public class JwtServiceImpl implements JwtService {
     private String secret;
 
     @Override
-    public Map<String, String> generateTokens(String subject) {
+    public String generateTokens(String subject) {
         Algorithm algorithm = Algorithm.HMAC256(secret);
 
         String jwtAccessToken = JWT.create()
@@ -41,10 +41,10 @@ public class JwtServiceImpl implements JwtService {
                 .withExpiresAt(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRES_TIME))
                 .sign(algorithm);
 
-        Map<String, String> jwtToken = new HashMap<>();
-        jwtToken.put("jwtAccessToken", jwtAccessToken);
+//        Map<String, String> jwtToken = new HashMap<>();
+//        jwtToken.put("jwtAccessToken", jwtAccessToken);
 
-        return jwtToken;
+        return jwtAccessToken;
     }
 
     @Override

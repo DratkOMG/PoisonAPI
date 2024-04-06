@@ -1,5 +1,6 @@
 package com.example.poisontest.service.impl;
 
+import com.example.poisontest.dto.token.TokenDto;
 import com.example.poisontest.dto.user.CreateOrUpdateUserDto;
 import com.example.poisontest.dto.user.UserDto;
 import com.example.poisontest.exception.NotFoundException;
@@ -43,7 +44,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, String> addUser(CreateOrUpdateUserDto createOrUpdateUserDto) {
+    public TokenDto addUser(CreateOrUpdateUserDto createOrUpdateUserDto) {
         if (usernameExists(createOrUpdateUserDto.getUsername())) {
             throw new UserAlreadyExistsException(createOrUpdateUserDto.getUsername() + " username already exists");
         }
@@ -56,9 +57,11 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
 
-        Map<String, String> token = jwtService.generateTokens(createOrUpdateUserDto.getUsername());
+        TokenDto tokenDto = TokenDto.builder()
+                .accessToken(jwtService.generateTokens(createOrUpdateUserDto.getUsername()))
+                .build();
 
-        return token;
+        return tokenDto;
     }
 
     @Override
