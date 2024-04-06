@@ -4,7 +4,7 @@ import com.example.poisontest.dtos.user.CreateOrUpdateUserDto;
 import com.example.poisontest.dtos.user.UserDto;
 import com.example.poisontest.exceptions.NotFoundException;
 import com.example.poisontest.exceptions.UserAlreadyExistsException;
-import com.example.poisontest.models.Users;
+import com.example.poisontest.models.User;
 import com.example.poisontest.repositories.UserRepository;
 import com.example.poisontest.security.utils.JwtUtil;
 import com.example.poisontest.services.UserService;
@@ -31,15 +31,15 @@ public class UserServiceImpl implements UserService {
     private final JwtUtil jwtUtil;
 
     @Override
-    public Users getUserById(Long userId) {
+    public User getUserById(Long userId) {
         return getUserByIdOrThrow(userId);
     }
 
     @Override
     public UserDto getUserDto(Long userId) {
-        Users users = getUserById(userId);
+        User user = getUserById(userId);
 
-        return from(users);
+        return from(user);
     }
 
     @Override
@@ -48,13 +48,13 @@ public class UserServiceImpl implements UserService {
             throw new UserAlreadyExistsException(createOrUpdateUserDto.getUsername() + " username already exists");
         }
 
-        Users users = Users.builder()
+        User user = User.builder()
                 .username(createOrUpdateUserDto.getUsername())
                 .password(createOrUpdateUserDto.getPassword())
                 .age(createOrUpdateUserDto.getAge())
                 .build();
 
-        userRepository.save(users);
+        userRepository.save(user);
 
         Map<String, String> token = jwtUtil.generateTokens(createOrUpdateUserDto.getUsername());
 
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(CreateOrUpdateUserDto createOrUpdateUserDto, Long userId) {
-        Users users = getUserById(userId);
+        User user = getUserById(userId);
 
         if (usernameExists(createOrUpdateUserDto.getUsername())) {
             throw new UserAlreadyExistsException(createOrUpdateUserDto.getUsername() + " username already exists");
@@ -74,18 +74,18 @@ public class UserServiceImpl implements UserService {
         Integer age = createOrUpdateUserDto.getAge();
 
         if (username != null && !username.isBlank()) {
-            users.setUsername(username);
+            user.setUsername(username);
         }
         if (password != null && !password.isBlank()) {
-            users.setPassword(password);
+            user.setPassword(password);
         }
         if (age != null && age > 17) {
-            users.setAge(age);
+            user.setAge(age);
         }
 
-        userRepository.save(users);
+        userRepository.save(user);
 
-        return from(users);
+        return from(user);
     }
 
     @Override
@@ -94,22 +94,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Users getUserByUsername(String username) {
+    public User getUserByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() ->
                 new NotFoundException("User " + username + " not found"));
     }
 
     @Override
-    public List<Users> getAllUserByIds(List<Long> userIds) {
+    public List<User> getAllUserByIds(List<Long> userIds) {
         return userRepository.findAllById(userIds);
 
     }
 
     @Override
     public List<UserDto> getListUserDto() {
-        List<Users> usersList = userRepository.findAll();
+        List<User> userList = userRepository.findAll();
 
-        return from(usersList);
+        return from(userList);
     }
 
     @Override
@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
         return from(getAuthenticationUser());
     }
 
-    private Users getUserByIdOrThrow(Long userId) {
+    private User getUserByIdOrThrow(Long userId) {
         return userRepository.findById(userId).orElseThrow(() ->
                 new NotFoundException("User " + userId + " not found"));
     }
@@ -126,7 +126,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.existsByUsername(username);
     }
 
-    public Users getAuthenticationUser() {
+    public User getAuthenticationUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         String username = authentication.getName();

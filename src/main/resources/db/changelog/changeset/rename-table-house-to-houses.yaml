@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: rename-table-house
+      author: DatChan
+      changes:
+        - renameTable:
+            newTableName: houses
+            oldTableName: house

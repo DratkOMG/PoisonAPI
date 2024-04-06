@@ -1,6 +1,6 @@
 package com.example.poisontest.security.details;
 
-import com.example.poisontest.models.Users;
+import com.example.poisontest.models.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,7 +16,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class UserDetailsImpl implements UserDetails {
 
-    private final Users users;
+    private final User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -25,12 +25,12 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getPassword() {
-        return users.getPassword();
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return users.getUsername();
+        return user.getUsername();
     }
 
     @Override

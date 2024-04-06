@@ -1,7 +1,7 @@
 package com.example.poisontest.dtos.house;
 
 import com.example.poisontest.models.House;
-import com.example.poisontest.models.Users;
+import com.example.poisontest.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,7 +30,7 @@ public class HouseDto {
     public static HouseDto from(House house) {
         List<Long> residentsIdList = new ArrayList<>();
         if (house.getResidents() != null) {
-            residentsIdList = house.getResidents().stream().map(Users::getUserId).toList();
+            residentsIdList = house.getResidents().stream().map(User::getUserId).toList();
         }
 
         return HouseDto.builder()

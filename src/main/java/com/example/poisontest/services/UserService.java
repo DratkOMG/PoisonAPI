@@ -2,7 +2,7 @@ package com.example.poisontest.services;
 
 import com.example.poisontest.dtos.user.CreateOrUpdateUserDto;
 import com.example.poisontest.dtos.user.UserDto;
-import com.example.poisontest.models.Users;
+import com.example.poisontest.models.User;
 
 import java.util.List;
 import java.util.Map;
@@ -12,7 +12,7 @@ import java.util.Map;
  * @created 14:07 - 04/04/2024
  */
 public interface UserService {
-    Users getUserById(Long userId);
+    User getUserById(Long userId);
 
     UserDto getUserDto(Long userId);
 
@@ -22,13 +22,13 @@ public interface UserService {
 
     void deleteUser(Long userId);
 
-    Users getUserByUsername(String username);
+    User getUserByUsername(String username);
 
-    List<Users> getAllUserByIds(List<Long> userIds);
+    List<User> getAllUserByIds(List<Long> userIds);
 
     List<UserDto> getListUserDto();
 
     UserDto getMyProfile();
 
-    Users getAuthenticationUser();
+    User getAuthenticationUser();
 }

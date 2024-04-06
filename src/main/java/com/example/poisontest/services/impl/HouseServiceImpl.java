@@ -6,7 +6,7 @@ import com.example.poisontest.exceptions.NotFoundException;
 import com.example.poisontest.exceptions.UserAlreadyExistsException;
 import com.example.poisontest.exceptions.UserNotOwnerException;
 import com.example.poisontest.models.House;
-import com.example.poisontest.models.Users;
+import com.example.poisontest.models.User;
 import com.example.poisontest.repositories.HouseRepository;
 import com.example.poisontest.services.HouseService;
 import com.example.poisontest.services.UserService;
@@ -39,16 +39,16 @@ public class HouseServiceImpl implements HouseService {
 
     @Override
     public HouseDto addHouse(CreateOrUpdateHouseDto createOrUpdateHouseDto) {
-        Users users;
+        User user;
         if (createOrUpdateHouseDto.getOwnerId() == null) {
-            users = userService.getAuthenticationUser();
+            user = userService.getAuthenticationUser();
         } else {
-            users = userService.getUserById(createOrUpdateHouseDto.getOwnerId());
+            user = userService.getUserById(createOrUpdateHouseDto.getOwnerId());
         }
 
         House house = House.builder()
                 .address(createOrUpdateHouseDto.getAddress())
-                .owner(users)
+                .owner(user)
                 .build();
 
         houseRepository.save(house);
@@ -60,7 +60,7 @@ public class HouseServiceImpl implements HouseService {
     @Override
     public HouseDto updateHouse(CreateOrUpdateHouseDto createOrUpdateHouseDto,
                                 Long houseId) {
-        Users authenticationUser = userService.getAuthenticationUser();
+        User authenticationUser = userService.getAuthenticationUser();
 
         if (isNotTheOwner(houseId, authenticationUser.getUserId())) {
             throw new UserNotOwnerException("Only owner can update the house!");
@@ -68,8 +68,8 @@ public class HouseServiceImpl implements HouseService {
 
         House houseToUpdate = getHouseOrThrow(houseId);
         if (createOrUpdateHouseDto.getOwnerId() != null) {
-            Users usersToBeOwner = userService.getUserById(createOrUpdateHouseDto.getOwnerId());
-            houseToUpdate.setOwner(usersToBeOwner);
+            User userToBeOwner = userService.getUserById(createOrUpdateHouseDto.getOwnerId());
+            houseToUpdate.setOwner(userToBeOwner);
         }
 
         houseToUpdate.setAddress(createOrUpdateHouseDto.getAddress());
@@ -81,7 +81,7 @@ public class HouseServiceImpl implements HouseService {
 
     @Override
     public void deleteHouse(Long houseId) {
-        Users authenticationUser = userService.getAuthenticationUser();
+        User authenticationUser = userService.getAuthenticationUser();
 
         if (isNotTheOwner(houseId, authenticationUser.getUserId())) {
             throw new UserNotOwnerException("Only owner can delete the house!");
@@ -92,7 +92,7 @@ public class HouseServiceImpl implements HouseService {
 
     @Override
     public HouseDto addUserToHouse(Long houseId, Long userId) {
-        Users authenticationUser = userService.getAuthenticationUser();
+        User authenticationUser = userService.getAuthenticationUser();
 
         if (isNotTheOwner(houseId, authenticationUser.getUserId())) {
             throw new UserNotOwnerException("Only owner can add user to the house!");
@@ -103,7 +103,7 @@ public class HouseServiceImpl implements HouseService {
         }
 
         House houseToAddUser = getHouseOrThrow(houseId);
-        Users userToAddToHouse = userService.getUserById(userId);
+        User userToAddToHouse = userService.getUserById(userId);
 
         houseToAddUser.getResidents().add(userToAddToHouse);
         houseRepository.save(houseToAddUser);
@@ -113,22 +113,22 @@ public class HouseServiceImpl implements HouseService {
 
     @Override
     public HouseDto addUsersToHouse(Long houseId, List<Long> userIds) {
-        Users authenticationUser = userService.getAuthenticationUser();
+        User authenticationUser = userService.getAuthenticationUser();
 
         if (isNotTheOwner(houseId, authenticationUser.getUserId())) {
             throw new UserNotOwnerException("Only owner can add users to the house!");
         }
 
-        List<Users> usersToAddToHouse = userService.getAllUserByIds(userIds);
+        List<User> userToAddToHouse = userService.getAllUserByIds(userIds);
         House houseToAddUser = getHouseOrThrow(houseId);
 
-        for (Users users : usersToAddToHouse) {
-            if (isResident(houseId, users.getUserId())) {
-                throw new UserAlreadyExistsException("User " + users.getUserId() + " is here");
+        for (User user : userToAddToHouse) {
+            if (isResident(houseId, user.getUserId())) {
+                throw new UserAlreadyExistsException("User " + user.getUserId() + " is here");
             }
         }
 
-        houseToAddUser.getResidents().addAll(usersToAddToHouse);
+        houseToAddUser.getResidents().addAll(userToAddToHouse);
         houseRepository.save(houseToAddUser);
 
         return from(houseToAddUser);
@@ -136,7 +136,7 @@ public class HouseServiceImpl implements HouseService {
 
     @Override
     public void removeUserFromHouse(Long houseId, Long userId) {
-        Users authenticationUser = userService.getAuthenticationUser();
+        User authenticationUser = userService.getAuthenticationUser();
 
         if (isNotTheOwner(houseId, authenticationUser.getUserId())) {
             throw new UserNotOwnerException("Only owner can remove user from the house!");
@@ -145,7 +145,7 @@ public class HouseServiceImpl implements HouseService {
         House houseToRemoveUser = getHouseOrThrow(houseId);
 
         if (isResident(houseId, userId)) {
-            Users userToRemoveFromHouse = userService.getUserById(userId);
+            User userToRemoveFromHouse = userService.getUserById(userId);
             houseToRemoveUser.getResidents().remove(userToRemoveFromHouse);
 
             houseRepository.save(houseToRemoveUser);

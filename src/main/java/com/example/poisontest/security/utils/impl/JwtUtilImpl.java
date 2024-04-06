@@ -5,7 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.poisontest.models.Users;
+import com.example.poisontest.models.User;
 import com.example.poisontest.security.details.UserDetailsImpl;
 import com.example.poisontest.security.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,7 +51,7 @@ public class JwtUtilImpl implements JwtUtil {
     public Authentication buildAuthentication(String token) {
         String username = parse(token);
 
-        UserDetails userDetails = new UserDetailsImpl(Users.builder()
+        UserDetails userDetails = new UserDetailsImpl(User.builder()
                 .username(username)
                 .build());
 

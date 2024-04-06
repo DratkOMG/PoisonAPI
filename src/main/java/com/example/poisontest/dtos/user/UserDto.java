@@ -1,7 +1,7 @@
 package com.example.poisontest.dtos.user;
 
 import com.example.poisontest.models.House;
-import com.example.poisontest.models.Users;
+import com.example.poisontest.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,20 +29,20 @@ public class UserDto {
 
     private List<Long> livingHouses;
 
-    public static UserDto from(Users users) {
-        List<Long> ownerHouseIdsList = users.getOwnerHouses().stream().map(House::getHouseId).toList();
-        List<Long> livingHouseIdsList = users.getLivingHouses().stream().map(House::getHouseId).toList();
+    public static UserDto from(User user) {
+        List<Long> ownerHouseIdsList = user.getOwnerHouses().stream().map(House::getHouseId).toList();
+        List<Long> livingHouseIdsList = user.getLivingHouses().stream().map(House::getHouseId).toList();
 
         return UserDto.builder()
-                .id(users.getUserId())
-                .username(users.getUsername())
-                .age(users.getAge())
+                .id(user.getUserId())
+                .username(user.getUsername())
+                .age(user.getAge())
                 .ownerHouses(ownerHouseIdsList)
                 .livingHouses(livingHouseIdsList)
                 .build();
     }
 
-    public static List<UserDto> from(List<Users> users) {
+    public static List<UserDto> from(List<User> users) {
         return users.stream()
                 .map(UserDto::from)
                 .collect(Collectors.toList());

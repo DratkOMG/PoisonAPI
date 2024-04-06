@@ -17,6 +17,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "houses")
 public class House {
 
     @Id
@@ -28,13 +29,13 @@ public class House {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
-    private Users owner;
+    private User owner;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "house_residents",
             joinColumns = @JoinColumn(name = "house_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private List<Users> residents;
+    private List<User> residents;
 
 }
