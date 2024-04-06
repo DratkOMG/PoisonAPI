@@ -1,6 +1,6 @@
 package com.example.poisontest.security.config;
 
-import com.example.poisontest.security.filters.JwtTokenAuthorizationFilter;
+import com.example.poisontest.security.filter.JwtTokenAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
